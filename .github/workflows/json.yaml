@@ -1,0 +1,19 @@
+name: create-json
+
+on:
+  push: 
+    branches: ["master"]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+
+jobs:
+    create_json:
+      runs-on: ubuntu-latest
+      steps:
+        - name: create-json
+          id: create-json
+          uses: jsdaniell/create-json@v1.2.3
+          with:
+            name: "new-json-file.json"
+            json: '{"name":"jsdaniell", "password":"mypass"}'
