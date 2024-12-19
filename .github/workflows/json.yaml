@@ -17,3 +17,27 @@ jobs:
           with:
             name: "new-json-file.json"
             json: '{"name":"jsdaniell", "password":"mypass"}'
+
+    generate-report:
+      runs-on: ubuntu-latest
+
+      steps:
+      # Step 1: Checkout code
+       - name: Checkout repository
+         uses: actions/checkout@v3
+
+      # Step 3: Read the JSON file and format it into a table
+       - name: Create tabular report
+         run: |
+            sudo apt-get install jq
+          
+            echo "| Name | password |"
+            echo "|-----------|--------|"
+            cat new-json-file.json | jq -r '.[] | "| \(.name) | \(.password) | "' 
+          
+      # Optional Step: Save the results as artifacts
+       - name: Upload results as artifacts
+         uses: actions/upload-artifact@v3
+         with:
+            name: test-results
+            path: results.json
