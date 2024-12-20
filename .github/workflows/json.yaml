@@ -1,43 +1,39 @@
-name: create-json
+name: Create Workflow Data JSON
 
 on:
-  push: 
-    branches: ["master"]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+  push:
+    branches:
+      - main
 
 jobs:
-    create_json:
-      runs-on: ubuntu-latest
-      steps:
-        - name: create-json
-          id: create-json
-          uses: jsdaniell/create-json@v1.2.3
-          with:
-            name: "new-json-file.json"
-            json: '{"name":"jsdaniell", "password":"mypass"}'
+  create-json:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    generate-report:
-      runs-on: ubuntu-latest
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-      steps:
-      # Step 1: Checkout code
-       - name: Checkout repository
-         uses: actions/checkout@v3
+      - name: Create JSON file with workflow data
+        run: |
+          echo "{
+            \"event_name\": \"${{ github.event_name }}\",
+            \"workflow\": \"${{ github.workflow }}\",
+            \"run_id\": \"${{ github.run_id }}\",
+            \"run_number\": \"${{ github.run_number }}\",
+            \"commit\": \"${{ github.sha }}\",
+            \"repository\": \"${{ github.repository }}\",
+            \"actor\": \"${{ github.actor }}\",
+            \"ref\": \"${{ github.ref }}\",
+            \"event_time\": \"${{ github.event.head_commit.timestamp }}\"
+          }" > workflow_data.json
 
-      # Step 3: Read the JSON file and format it into a table
-       - name: Create tabular report
-         run: |
-            sudo apt-get install jq
-          
-            echo "| Name | password |"
-            echo "|-----------|--------|"
-            cat new-json-file.json | jq -r '.[] | "| \(.name) | \(.password) | "' 
-          
-      # Optional Step: Save the results as artifacts
-       - name: Upload results as artifacts
-         uses: actions/upload-artifact@v3
-         with:
-            name: test-results
-            path: results.json
+      - name: Upload workflow data file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: workflow-data
+          path: workflow_data.json
