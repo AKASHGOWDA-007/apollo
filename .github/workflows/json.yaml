@@ -58,7 +58,7 @@ jobs:
 
       - name: Extract artifact ZIP
         run: |
-          unzip workflow-data.zip  # Extract the ZIP file
+          unzip workflow-data  # Extract the ZIP file
       - name: Read and output JSON in tabular format
         run: |
           JSON_FILE="workflow_data.json"
