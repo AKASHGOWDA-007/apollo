@@ -51,8 +51,14 @@ jobs:
         with:
           name: workflow_data
           path: .
-      - name: Install jq
-        run: sudo apt-get install -y jq
+      - name: Install jq and unzip
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y jq unzip
+
+      - name: Extract artifact ZIP
+        run: |
+          unzip workflow-data.zip  # Extract the ZIP file
       - name: Read and output JSON in tabular format
         run: |
           JSON_FILE="workflow_data.json"
