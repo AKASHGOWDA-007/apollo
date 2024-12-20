@@ -49,7 +49,7 @@ jobs:
       - name: Download audit report artifact
         uses: actions/download-artifact@v4
         with:
-          name: workflow_data
+          name: workflow-data
           path: .
       - name: Install jq and unzip
         run: |
