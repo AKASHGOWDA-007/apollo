@@ -44,8 +44,8 @@ jobs:
       steps:
       - name: checkout repository
         uses: actions/checkout@v2
-      - name: Download audit report artificat
-        uses: actions/download-artifiact@v2
+      - name: Download audit report artifact
+        uses: actions/download-artifact@v2
         with:
           name: workflow_data.json
           path: .
