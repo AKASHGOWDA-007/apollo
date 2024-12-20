@@ -33,10 +33,12 @@ jobs:
           }" > workflow_data.json
 
       - name: Upload workflow data file as artifact
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: workflow-data
           path: workflow_data.json
+          if-no-files-found: error
     
   generate-report:
       needs: create-json
