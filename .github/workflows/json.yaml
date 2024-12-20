@@ -37,3 +37,24 @@ jobs:
         with:
           name: workflow-data
           path: workflow_data.json
+    
+  generate-report:
+      needs: create-json
+      runs-on: ubuntu-latest
+      steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: Download audit report artificat
+        uses: actions/download-artifiact@v2
+        with:
+          name: workflow_data.json
+          path: .
+      - name: Install jq
+        run: sudo apt-get install -y jq
+      - name: Read and output JSON in tabular format
+        run: |
+          JSON_FILE="workflow_data.json"
+          jq -r '[
+            "Event Name", "Workflow", "Run ID", "Run Number", "Commit", "Repository", "Actor", "Ref", "Event Time",
+            "\(.event_name)", "\(.workflow)", "\(.run_id)", "\(.run_number)", "\(.commit)", "\(.repository)", "\(.actor)", "\(.ref)", "\(.event_time)"
+          ] | @tsv' $JSON_FILE
